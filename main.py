@@ -8,7 +8,7 @@ TABLE SCHEMA
 
 import random
 from dataclasses import dataclass, field
-import cx_Oracle
+import oracledb
 import config as cfg
 from faker import Faker
 from time import time
@@ -40,9 +40,9 @@ class Order:
 def insert_into(query, data):
   try:
     # establish a new connection
-    with cx_Oracle.connect(cfg.username,
-                        cfg.password,
-                        cfg.dsn,
+    with oracledb.connect(user=cfg.username,
+                        password=cfg.password,
+                        dsn=cfg.dsn,
                         encoding=cfg.encoding) as connection:
         # create a cursor
         with connection.cursor() as cursor:
@@ -50,7 +50,7 @@ def insert_into(query, data):
           cursor.execute(query, data)
           # commit work
           connection.commit()
-  except cx_Oracle.Error as error:
+  except oracledb.Error as error:
     print('Error occurred:')
     print(str(error))
 
@@ -78,7 +78,7 @@ def insert_purchase(
   purchase_time: datetime.datetime=None
   ):
 
-  query = f"INSERT INTO purchase(TRANSACTION_ID, user_name, currency, purchase_value, country, PURCHASE_TIME) values(:id, :username, :currency, :p_v, :country, :purchase_time)"
+  query = f"INSERT INTO purchase(TRANSACTION_ID, username, currency, purchase_value, country, PURCHASE_TIME) values(:id, :username, :currency, :p_v, :country, :purchase_time)"
   data = {
     "id":id,
     "username":username, 
@@ -92,7 +92,7 @@ def insert_purchase(
 
 
 if __name__=="__main__":
-  with open('/home/fasih/big_data/python/transaction_id.txt','r') as f:
+  with open('/home/fasih/python_customer/transaction_id.txt','r') as f:
     trnx_id = f.read()
     if not trnx_id:
       trnx_id = 1
@@ -125,5 +125,5 @@ if __name__=="__main__":
     trnx_id+=1
     time.sleep(3)
 
-  with open('/home/fasih/big_data/python/transaction_id.txt','w') as f:
+  with open('/home/fasih/python_customer/transaction_id.txt','w') as f:
     f.write(str(trnx_id))

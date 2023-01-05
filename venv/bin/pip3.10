@@ -1,4 +1,4 @@
-#!/home/fasih/big_data/python/venv/bin/python3
+#!/home/fasih/python_customer/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
